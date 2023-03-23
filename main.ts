@@ -8,8 +8,8 @@ const { app, BrowserWindow, nativeImage } = require('electron');
 
 function createWindow () {
   let mainWindow = new BrowserWindow({
-    width: 1200, // 窗口宽度
-    height: 800, // 窗口高度
+    width: 800, // 窗口宽度
+    height: 600, // 窗口高度
     title: "Electron", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
     icon: nativeImage.createFromPath('src/public/favicon.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
     webPreferences: { // 网页功能设置
@@ -21,13 +21,11 @@ function createWindow () {
   });
 
   // 加载应用 --打包react应用后，__dirname为当前文件路径
-  // mainWindow.loadFile(url.format({
-  //   pathname: path.join(__dirname, './public/index.html'),
+  // mainWindow.loadURL(url.format({
+  //   pathname: path.join(__dirname, './build/index.html'),
   //   protocol: 'file:',
   //   slashes: true
   // }));
-
-  // mainWindow.loadFile('./public/index.html')
 
   // 加载应用 --开发阶段  需要运行 npm run start
   mainWindow.loadURL('http://localhost:3000/');
