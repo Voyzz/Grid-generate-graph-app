@@ -1,5 +1,5 @@
 import React from 'react';
-import { SettingTwoTone, PictureTwoTone } from '@ant-design/icons';
+import { SettingOutlined, PictureOutlined, ReloadOutlined } from '@ant-design/icons';
 import { FloatButton } from 'antd';
 
 interface ChartProps {
@@ -19,10 +19,28 @@ const Buttons = React.memo((props: ChartProps) => {
     oA.remove();
   }
 
+  const reload = () => {
+    window.location.reload();
+  }
+
+  const findNode = () => {
+    const { chartInstance } = props;
+    const axisList =  chartInstance.getModel().getSeriesByIndex(0).preservedPoints;
+    const _key = '粤潮州21';
+    chartInstance.setOption({
+      series: {
+        center: axisList[_key],
+      }
+    })
+    console.log('=====axis', axisList)
+  }
+  
   return (
     <FloatButton.Group shape="circle" style={{ right: 94 }}>
-      <FloatButton icon={<SettingTwoTone />} onClick={props.openDrawer}/>
-      <FloatButton icon={<PictureTwoTone />} onClick={downloadPic}/>
+      <FloatButton icon={<ReloadOutlined color='#1890ff' />} onClick={findNode}/>
+      <FloatButton icon={<ReloadOutlined color='#1890ff' />} onClick={reload}/>
+      <FloatButton icon={<SettingOutlined />} onClick={props.openDrawer}/>
+      <FloatButton icon={<PictureOutlined />} onClick={downloadPic}/>
     </FloatButton.Group>
   )
 });

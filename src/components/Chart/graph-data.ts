@@ -12,14 +12,15 @@ const girdNodeFilter = (oriNodes: nodeOriginKey[]) => uniqBy(oriNodes?.filter((_
 const pureNodeList = girdNodeFilter(oriNodesData);
 
 // node转换为option.data数据
-const girdNodeWrapper = (oriNodes: nodeOriginKey[]) => oriNodes.map((_node: nodeOriginKey) => {
+const girdNodeWrapper = (oriNodes: nodeOriginKey[]) => oriNodes.map((_node: nodeOriginKey, idx) => {
   return {
     id: _node[nodeKeyReflect.name],
     name: `${_node[nodeKeyReflect.name]}(${_node[nodeKeyReflect.amplitude]})`,
-    symbolSize: Math.ceil(_node[nodeKeyReflect.amplitude] - 200)
+    symbolSize: Math.ceil(_node[nodeKeyReflect.amplitude] - 200),
+    // ...(idx === 0 ? {x: '50%', y: '50%'} : {})
   }
 });
-const graphNode = girdNodeWrapper(pureNodeList);
+const graphNode = girdNodeWrapper(pureNodeList).slice(0, 10);
 
 // 根据有功功率筛选link
 const gridLinkFilter = (oriLinkData: linkOriginKey[]) => uniqBy(oriLinkData?.map((_link: linkOriginKey) => {
@@ -44,7 +45,7 @@ const linkNodeWrapper = (oriLinkData: linkOriginKey[]) => oriLinkData.map((_link
     target: _link[linkKeyReflect.targetName],
     value: Number(_link[linkKeyReflect.activePower]),
     lineStyle: {
-      width: Number(_link[linkKeyReflect.activePower]) / 100,
+      width: Number(_link[linkKeyReflect.activePower]) / 100 + 1,
     },
     label: {
       show: true,
