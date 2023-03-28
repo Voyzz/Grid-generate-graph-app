@@ -1,5 +1,5 @@
 import React from 'react';
-import { SettingOutlined, PictureOutlined, ReloadOutlined } from '@ant-design/icons';
+import { SettingOutlined, PictureOutlined, ReloadOutlined, SearchOutlined } from '@ant-design/icons';
 import { FloatButton } from 'antd';
 
 interface ChartProps {
@@ -37,8 +37,8 @@ const Buttons = React.memo((props: ChartProps) => {
   
   return (
     <FloatButton.Group shape="circle" style={{ right: 94 }}>
-      <FloatButton icon={<ReloadOutlined color='#1890ff' />} onClick={findNode}/>
-      <FloatButton icon={<ReloadOutlined color='#1890ff' />} onClick={reload}/>
+      <FloatButton icon={<SearchOutlined />} onClick={findNode}/>
+      <FloatButton icon={<ReloadOutlined />} onClick={reload}/>
       <FloatButton icon={<SettingOutlined />} onClick={props.openDrawer}/>
       <FloatButton icon={<PictureOutlined />} onClick={downloadPic}/>
     </FloatButton.Group>
