@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Drawer } from 'antd';
+import { CustomOptionsItems } from '../FormEditor';
 import Buttons from '../Buttons';
+import FormEditor from '../FormEditor';
 import * as echarts from 'echarts';
 import './index.css';
-import { option as chartOption } from './graph-option';
+import { getEChartsOption } from './graph-option';
 
-interface ChartProps {}
+interface ChartProps { }
 
 const Chart = React.memo((props: ChartProps) => {
   const [chartInstance, setChartInstance] = useState<any>(null);
@@ -16,19 +17,23 @@ const Chart = React.memo((props: ChartProps) => {
     const domNode = document.getElementById('grid-chart');
     const theChart = echarts.init(domNode);
     // 绘制图表
-    theChart.setOption(chartOption);
+    theChart.setOption(getEChartsOption());
     setChartInstance(theChart);
   }, []);
 
+  const refreshEChartsOption = (customOptions: CustomOptionsItems) => {
+    chartInstance.setOption(getEChartsOption(customOptions));
+  }
+
   return (
     <>
-      <div id="grid-chart"/>
-      <Buttons chartInstance={chartInstance} openDrawer={() => {setSidesheetVisible(true)}}/>
-      <Drawer title="参数配置" placement="right" onClose={() => {setSidesheetVisible(false)}} open={sidesheetVisible}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-      </Drawer>
+      <div id="grid-chart" />
+      <Buttons chartInstance={chartInstance} openDrawer={() => { setSidesheetVisible(true) }} />
+      <FormEditor
+        sidesheetVisible={sidesheetVisible}
+        closeDrawer={() => { setSidesheetVisible(false) }}
+        getFormValues={refreshEChartsOption}
+      />
     </>
   )
 });
