@@ -1,6 +1,6 @@
 import React from 'react';
-import { SettingOutlined, PictureOutlined, ReloadOutlined, SearchOutlined } from '@ant-design/icons';
-import { FloatButton } from 'antd';
+import { SettingOutlined, PictureOutlined, ReloadOutlined, SearchOutlined, UnorderedListOutlined } from '@ant-design/icons';
+import { FloatButton, Modal, Input, Form } from 'antd';
 
 interface ChartProps {
   chartInstance?: any;
@@ -8,6 +8,8 @@ interface ChartProps {
 }
 
 const Buttons = React.memo((props: ChartProps) => {
+  const [form] = Form.useForm();
+
   const downloadPic = () => {
     const { chartInstance } = props;
     const picUrl = chartInstance.getDataURL();
@@ -24,24 +26,45 @@ const Buttons = React.memo((props: ChartProps) => {
   }
 
   const findNode = () => {
-    const { chartInstance } = props;
-    const axisList =  chartInstance.getModel().getSeriesByIndex(0).preservedPoints;
-    const _key = '粤潮州21';
-    chartInstance.setOption({
-      series: {
-        center: axisList[_key],
+    Modal.info({
+      title: '搜索节点名称',
+      content:
+        <Form
+          form={form}
+          initialValues={{ searchKey: '' }}
+        >
+          <Form.Item name="searchKey">
+            <Input
+              placeholder="Basic usage"
+            />
+          </Form.Item>
+        </Form>,
+      onOk: () => {
+        const { chartInstance } = props;
+        const axisList = chartInstance.getModel().getSeriesByIndex(0).preservedPoints;
+        const values = form.getFieldsValue();
+        const _key = values.searchKey || '';
+        chartInstance.setOption({
+          series: {
+            center: axisList[_key],
+          }
+        })
+        console.log('=====axis', axisList[_key])
       }
     })
-    console.log('=====axis', axisList)
   }
-  
+
   return (
-    <FloatButton.Group shape="circle" style={{ right: 94 }}>
-      <FloatButton icon={<SearchOutlined />} onClick={findNode}/>
-      <FloatButton icon={<ReloadOutlined />} onClick={reload}/>
-      <FloatButton icon={<SettingOutlined />} onClick={props.openDrawer}/>
-      <FloatButton icon={<PictureOutlined />} onClick={downloadPic}/>
-    </FloatButton.Group>
+    <>
+      <FloatButton.Group shape="circle" style={{ right: 154 }} trigger="hover" icon={<UnorderedListOutlined />}>
+        <FloatButton icon={<SearchOutlined />} onClick={findNode} />
+        <FloatButton icon={<ReloadOutlined />} onClick={reload} />
+        <FloatButton icon={<PictureOutlined />} onClick={downloadPic} />
+      </FloatButton.Group>
+      <FloatButton.Group shape="circle" style={{ right: 94 }}>
+        <FloatButton type="primary" icon={<SettingOutlined />} onClick={props.openDrawer} />
+      </FloatButton.Group>
+    </>
   )
 });
 

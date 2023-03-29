@@ -11,11 +11,9 @@ type EChartsOption = echarts.EChartsOption;
 export const getEChartsOption = (
   customOptions?: CustomOptionsItems
 ): EChartsOption => {
-  const { nodesData = [], linkData = [] } = customOptions || {};
-
   const defalutOption: EChartsOption = {
     title: {
-      text: "电网节点图",
+      text: customOptions?.title || "暂无数据",
     },
     tooltip: {},
     animationDurationUpdate: 1500,
@@ -25,8 +23,8 @@ export const getEChartsOption = (
         type: "graph",
 
         /* 数据 */
-        nodes: getNodesData(nodesData),
-        links: getLinkData(linkData),
+        nodes: getNodesData(customOptions),
+        links: getLinkData(customOptions),
 
         /* 布局配置 */
         draggable: true, // 节点是否可拖拽
@@ -49,8 +47,9 @@ export const getEChartsOption = (
           show: true,
           formatter: "{b}",
           fontSize: 12,
+          // color: "#f00",
         },
-        // itemStyle: {},
+        itemStyle: {},
         // labelLayout: {
         //   draggable: true,
         // },
@@ -64,12 +63,36 @@ export const getEChartsOption = (
         },
         lineStyle: {
           width: 1,
-          color: "#e66",
+          // color: "#e66",
           curveness: 0,
         },
       },
     ],
   };
+
+  try {
+    const nodeColor = customOptions?.customConfig?.node?.nodeColor;
+    if (nodeColor) {
+      defalutOption.series[0].itemStyle = {
+        color: nodeColor,
+      };
+    }
+    const nodeTextColor = customOptions?.customConfig?.node?.nodeTextColor;
+    if (nodeTextColor) {
+      defalutOption.series[0].label.color = nodeTextColor;
+    }
+    const lineColor = customOptions?.customConfig?.link?.lineColor;
+    if (lineColor) {
+      defalutOption.series[0].lineStyle.color = lineColor;
+    }
+    const lineTextColor = customOptions?.customConfig?.link?.lineTextColor;
+    if (lineTextColor) {
+      defalutOption.series[0].edgeLabel.color = lineTextColor;
+    }
+  } catch (e) {
+    console.error(e);
+    return defalutOption;
+  }
 
   return defalutOption;
 };
