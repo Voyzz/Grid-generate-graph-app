@@ -10,7 +10,7 @@ interface ChartProps { }
 
 const Chart = React.memo((props: ChartProps) => {
   const [chartInstance, setChartInstance] = useState<any>(null);
-  const [sidesheetVisible, setSidesheetVisible] = useState<boolean>(false);
+  const [sidesheetVisible, setSidesheetVisible] = useState<boolean>(true);
 
   useEffect(() => {
     // 基于准备好的dom，初始化echarts实例
