@@ -26,16 +26,18 @@ const Buttons = React.memo((props: ChartProps) => {
   }
 
   const findNode = () => {
-    Modal.info({
-      title: '搜索节点名称',
+    Modal.confirm({
+      title: '搜索节点',
       content:
         <Form
           form={form}
           initialValues={{ searchKey: '' }}
+          labelCol={{ span: 0 }}
         >
           <Form.Item name="searchKey">
             <Input
-              placeholder="Basic usage"
+              style={{ marginTop: '20px', marginBottom: '-10px' }}
+              placeholder="搜索的节点名称"
             />
           </Form.Item>
         </Form>,
@@ -50,7 +52,9 @@ const Buttons = React.memo((props: ChartProps) => {
           }
         })
         console.log('=====axis', axisList[_key])
-      }
+      },
+      okText: '搜索',
+      cancelText: '取消'
     })
   }
 

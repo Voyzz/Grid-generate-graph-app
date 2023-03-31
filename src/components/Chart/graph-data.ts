@@ -59,9 +59,9 @@ export const getNodesData = (customOptions: CustomOptionsItems) => {
       const symbolSize = ((amp - min) / (max - min)) * 100 + 10;
       return {
         id: _node[nodeKeyReflect.name],
-        name: `${_node[nodeKeyReflect.name]}(${
+        name: `${_node[nodeKeyReflect.name]}\n${
           _node[nodeKeyReflect.amplitude]
-        })`,
+        }(kV)`,
         symbolSize,
         // ...(idx === 0 ? {x: '50%', y: '50%'} : {})
       };
@@ -135,7 +135,7 @@ export const getLinkData = (customOptions: CustomOptionsItems) => {
         },
         label: {
           show: true,
-          formatter: "{c}",
+          formatter: "{c}(mw)",
         },
       };
     });
