@@ -1,6 +1,6 @@
 import { uniqBy } from "lodash";
-// import oriLinkData from "../../data/link_data.json";
-// import oriNodesData from "../../data/node_data.json";
+import demoLinkData from "../../data/link_data.json";
+import demoNodesData from "../../data/node_data.json";
 import { CustomOptionsItems } from "../FormEditor";
 import {
   nodeKeyReflect as defaultNodeKeyReflect,
@@ -14,8 +14,11 @@ import {
 } from "../../types/link";
 
 export const getNodesData = (customOptions: CustomOptionsItems) => {
-  const { nodesData: oriNodesData = [], reflectKeys, customConfig } =
-    customOptions || {};
+  const {
+    nodesData: oriNodesData = demoNodesData?.slice(0, 30),
+    reflectKeys,
+    customConfig,
+  } = customOptions || {};
 
   if (!oriNodesData) {
     return [];
@@ -70,7 +73,7 @@ export const getNodesData = (customOptions: CustomOptionsItems) => {
 };
 
 export const getLinkData = (customOptions: CustomOptionsItems) => {
-  const { linkData: oriLinkData = [], reflectKeys, customConfig } =
+  const { linkData: oriLinkData = demoLinkData, reflectKeys, customConfig } =
     customOptions || {};
 
   if (!oriLinkData) {

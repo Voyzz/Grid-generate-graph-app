@@ -13,7 +13,7 @@ export const getEChartsOption = (
 ): EChartsOption => {
   const defalutOption: EChartsOption = {
     title: {
-      text: customOptions?.title || "暂无数据",
+      text: customOptions?.title || "Demon",
     },
     tooltip: {},
     animationDurationUpdate: 1500,
@@ -30,6 +30,7 @@ export const getEChartsOption = (
         draggable: true, // 节点是否可拖拽
         roam: true, // 开启缩放或者平移
         center: ["50%", "50%"],
+        zoom: 4,
 
         /* 力引导布局 */
         layout: "force",
