@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { isMobile } from '../../utils/common';
 import { Form, Button, Drawer, Space, Input, Collapse, Divider, Card, Slider } from 'antd';
 import ExcelUploader from '../../utils/ExcelUploader';
 import defaultValue from '../../data/form_default';
@@ -210,7 +211,7 @@ const FormEditor = React.memo((props: FormEditorProps) => {
 
   return (
     <Drawer
-      width={600}
+      width={isMobile ? 'calc(100vw - 40px)' : 600}
       title="参数配置"
       placement="left"
       onClose={() => { props.closeDrawer() }}
