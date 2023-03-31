@@ -67,14 +67,16 @@ const FormEditor = React.memo((props: FormEditorProps) => {
   };
 
   const renderDrawerFooter = () => (
-    <Space wrap>
-      <Button type="primary" onClick={onFinish}>
-        确定
-      </Button>
-      <Button htmlType="button" onClick={onReset}>
-        重置
-      </Button>
-    </Space>
+    <div className='drawerFooterBox'>
+      <Space wrap>
+        <Button type="primary" onClick={onFinish}>
+          确定
+        </Button>
+        <Button htmlType="button" onClick={onReset}>
+          重置
+        </Button>
+      </Space>
+    </div>
   )
 
   const renderFileConfig = () => (
@@ -203,7 +205,7 @@ const FormEditor = React.memo((props: FormEditorProps) => {
     <Drawer
       width={600}
       title="参数配置"
-      placement="right"
+      placement="left"
       onClose={() => { props.closeDrawer() }}
       open={sidesheetVisible}
       footer={renderDrawerFooter()}
