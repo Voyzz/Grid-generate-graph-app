@@ -29,6 +29,7 @@ export interface Configs {
 }
 export interface CustomOptionsItems {
   title: string;
+  bgColor: string;
   nodesData: any[];
   linkData: any[];
   reflectKeys: ReflectKeys;
@@ -171,6 +172,12 @@ const FormEditor = React.memo((props: FormEditorProps) => {
       <Form.Item
         label="图片标题"
         name="title"
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        label="背景颜色"
+        name="bgColor"
       >
         <Input />
       </Form.Item>

@@ -15,6 +15,7 @@ export const getEChartsOption = (
     title: {
       text: customOptions?.title || "Demon",
     },
+    backgroundColor: customOptions?.bgColor || "#ffffff00",
     tooltip: {},
     animationDurationUpdate: 1500,
     animationEasingUpdate: "quinticInOut",

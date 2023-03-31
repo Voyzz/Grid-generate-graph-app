@@ -4,6 +4,7 @@ import { linkKeyReflect, defaultLinkConfig } from "../types/link";
 
 const defaultValue: CustomOptionsItems = {
   title: "电网节点图",
+  bgColor: "#ffffff00",
   nodesData: [],
   linkData: [],
   reflectKeys: {
