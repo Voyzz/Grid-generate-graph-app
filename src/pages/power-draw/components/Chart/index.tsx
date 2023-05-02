@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CustomOptionsItems } from '../FormEditor';
+import GraphWithHeatmap from '../D3Chart';
 import Buttons from '../Buttons';
 import FormEditor from '../FormEditor';
 import * as echarts from 'echarts';
@@ -26,7 +27,8 @@ const Chart = React.memo((props: ChartProps) => {
   }
 
   return (
-    <>
+    <div className='grid-container'>
+      <GraphWithHeatmap />
       <div id="grid-chart" />
       <Buttons chartInstance={chartInstance} openDrawer={() => { setSidesheetVisible(true) }} />
       <FormEditor
@@ -34,7 +36,7 @@ const Chart = React.memo((props: ChartProps) => {
         closeDrawer={() => { setSidesheetVisible(false) }}
         getFormValues={refreshEChartsOption}
       />
-    </>
+    </div>
   )
 });
 

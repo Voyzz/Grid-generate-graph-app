@@ -1,0 +1,16 @@
+.formCard {
+  margin-bottom: 20px;
+}
+
+.formItem {
+  margin-top: -12px;
+  margin-bottom: 20px;
+}
+
+.drawerFooterBox {
+  height: 45px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}

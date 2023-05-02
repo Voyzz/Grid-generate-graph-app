@@ -19,6 +19,7 @@ const ExcelUploader = React.memo((props: ExcelUploaderProps) => {
     fileReader.onload = event => {
       try {
         const { result } = event.target;
+
         // 以二进制流方式读取得到整份excel表格对象
         const workbook = XLSX.read(result, { type: 'binary' });
         for (const sheet in workbook.Sheets) {
