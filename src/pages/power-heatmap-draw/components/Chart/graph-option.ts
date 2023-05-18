@@ -24,25 +24,17 @@ export const getEChartsOption = (
         type: "graph",
 
         /* 数据 */
-        nodes: getNodesData(customOptions),
+        data: getNodesData(customOptions),
         links: getLinkData(customOptions),
 
         /* 布局配置 */
-        draggable: true, // 节点是否可拖拽
-        roam: true, // 开启缩放或者平移
-        center: ["50%", "50%"],
-        zoom: 4,
+        draggable: false, // 节点是否可拖拽
+        roam: false, // 开启缩放或者平移
+        // center: ["50%", "50%"],
+        // zoom: 4,
 
         /* 力引导布局 */
-        layout: "force",
-        force: {
-          initLayout: "circular",
-          gravity: 0,
-          // repulsion: 60, // 节点之间的斥力因子
-          // edgeLength: 120, // 边的两个节点之间的距离
-          layoutAnimation: true, // 是否显示布局的迭代动画
-          friction: 1, // 节点的移动速度
-        },
+        layout: "none",
 
         /* 节点 */
         label: {
@@ -57,14 +49,19 @@ export const getEChartsOption = (
         // },
 
         /* 连接线 */
-        animation: false,
+        animation: true,
         autoCurveness: true,
+        edgeSymbol: ["circle", "arrow"],
         edgeSymbolSize: [4, 10],
         edgeLabel: {
-          fontSize: 12,
+          fontSize: 14,
+          offset: [30, 0],
+          // verticalAlign: "bottom",
+          // lineHeight: 14,
+          // height: 14,
         },
         lineStyle: {
-          width: 1,
+          width: 2,
           // color: "#e66",
           curveness: 0,
         },

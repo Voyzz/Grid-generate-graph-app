@@ -28,9 +28,13 @@ const Chart = React.memo((props: ChartProps) => {
 
   return (
     <div className='grid-container'>
+      {/* 热力图 */}
       <GraphWithHeatmap />
+      {/* 关系图 */}
       <div id="grid-chart" />
+      {/* 功能按钮 */}
       <Buttons chartInstance={chartInstance} openDrawer={() => { setSidesheetVisible(true) }} />
+      {/* 表单边栏 */}
       <FormEditor
         sidesheetVisible={sidesheetVisible}
         closeDrawer={() => { setSidesheetVisible(false) }}

@@ -1,145 +1,123 @@
-import { uniqBy } from "lodash";
-import demoLinkData from "../../data/link_data.json";
-import demoNodesData from "../../data/node_data.json";
+// import { uniqBy } from "lodash";
+// import demoLinkData from "../../data/link_data.json";
+// import demoNodesData from "../../data/node_data.json";
 import { CustomOptionsItems } from "../FormEditor";
 import {
-  nodeKeyReflect as defaultNodeKeyReflect,
+  // nodeKeyReflect as defaultNodeKeyReflect,
   nodeOriginKey,
-  defaultNodeConfig,
+  // defaultNodeConfig,
 } from "../../types/node";
 import {
-  linkKeyReflect as defaultLinkKeyReflect,
+  // linkKeyReflect as defaultLinkKeyReflect,
   linkOriginKey,
-  defaultLinkConfig,
+  // defaultLinkConfig,
 } from "../../types/link";
 
+const getNodeName = (it: any) => {
+  let _text = "";
+  try {
+    // const item = it["$"];
+    const item = it;
+    const subText = item.Label[0].SubText;
+    subText.forEach((text: any) => {
+      const Text = text["$"]?.Text;
+      if (Text) {
+        _text = _text + `${Text}\n`;
+      }
+    });
+  } catch (e) {
+    console.error(e);
+  }
+  return _text;
+};
+
+const zoom = 1;
+
 export const getNodesData = (customOptions: CustomOptionsItems) => {
-  const {
-    nodesData: oriNodesData = demoNodesData?.slice(0, 30),
-    reflectKeys,
-    customConfig,
-  } = customOptions || {};
+  const { nodesData: _oriNodesData = [] } = customOptions || {};
+
+  let oriNodesData = null;
+  try {
+    oriNodesData = _oriNodesData["NR_POWER_DRAW"]?.Canvas[0].StaSet[0].Station;
+  } catch (e) {
+    console.error(e);
+  }
+
+  console.info("========oriNodesData", oriNodesData);
 
   if (!oriNodesData) {
     return [];
   }
 
-  const nodeKeyReflect = reflectKeys?.node
-    ? reflectKeys?.node
-    : defaultNodeKeyReflect;
-
-  const nodeConfig = customConfig?.node
-    ? customConfig?.node
-    : defaultNodeConfig;
-
-  const { amplitudeRange } = nodeConfig;
-
-  // 根据幅值筛选node
-  const girdNodeFilter = (oriNodes: nodeOriginKey[]) =>
-    uniqBy(
-      oriNodes?.filter((_node: nodeOriginKey) => {
-        const nodeAmplitude = _node[nodeKeyReflect.amplitude];
-        return (
-          nodeAmplitude &&
-          nodeAmplitude >= amplitudeRange[0] &&
-          nodeAmplitude < amplitudeRange[1]
-        );
-      }),
-      nodeKeyReflect.name
-    );
-  const pureNodeList = girdNodeFilter(oriNodesData);
-
   // node转换为option.data数据
   const girdNodeWrapper = (oriNodes: nodeOriginKey[]) =>
-    oriNodes.map((_node: nodeOriginKey, idx) => {
-      const amp = Math.ceil(_node[nodeKeyReflect.amplitude]);
-      const min = amplitudeRange[0];
-      const max = amplitudeRange[1];
-      // 大小范围10 ~ 110;
-      const symbolSize = ((amp - min) / (max - min)) * 100 + 10;
+    oriNodes.map((_node: any, idx) => {
+      const item = _node["$"];
+
       return {
-        id: _node[nodeKeyReflect.name],
-        name: `${_node[nodeKeyReflect.name]}\n${
-          _node[nodeKeyReflect.amplitude]
-        }(kV)`,
-        symbolSize,
-        // ...(idx === 0 ? {x: '50%', y: '50%'} : {})
+        // id: idx,
+        name: getNodeName(_node),
+        symbolSize: 50,
+        x: parseInt(item.Pos_x) / zoom,
+        y: parseInt(item.Pos_y) / zoom,
       };
     });
-  const graphNode = girdNodeWrapper(pureNodeList);
+  const graphNode = girdNodeWrapper(oriNodesData);
   console.log("=====NodesData", graphNode);
 
   return graphNode;
 };
 
 export const getLinkData = (customOptions: CustomOptionsItems) => {
-  const { linkData: oriLinkData = demoLinkData, reflectKeys, customConfig } =
-    customOptions || {};
+  const { nodesData: _oriData = [] } = customOptions || {};
+
+  let oriLinkData = null;
+  try {
+    oriLinkData = _oriData["NR_POWER_DRAW"]?.Canvas[0].RelSet[0].LinkLine;
+  } catch (e) {
+    console.error(e);
+  }
+
+  let oriNodesData = {};
+  try {
+    oriNodesData = _oriData["NR_POWER_DRAW"]?.Canvas[0].StaSet[0].Station;
+  } catch (e) {
+    console.error(e);
+  }
 
   if (!oriLinkData) {
     return [];
   }
 
-  const linkKeyReflect = reflectKeys?.node
-    ? reflectKeys?.link
-    : defaultLinkKeyReflect;
-
-  const linkConfig = customConfig?.link
-    ? customConfig?.link
-    : defaultLinkConfig;
-
-  const { activePowerRange } = linkConfig;
-
-  // 根据有功功率筛选link
-  const gridLinkFilter = (oriLinkData: linkOriginKey[]) =>
-    uniqBy(
-      oriLinkData?.map((_link: linkOriginKey) => {
-        const linkActivePower = _link[linkKeyReflect.activePower];
-        const linkActivePowerNumber = Math.abs(Number(linkActivePower));
-        if (
-          linkActivePower &&
-          linkActivePowerNumber > activePowerRange[0] &&
-          linkActivePowerNumber < activePowerRange[1]
-        ) {
-          return {
-            ..._link,
-            uniqKey: JSON.stringify(
-              [
-                _link[linkKeyReflect.sourceName],
-                _link[linkKeyReflect.targetName],
-              ].sort()
-            ),
-          };
-        }
-        return null;
-      }),
-      "uniqKey"
-    ).filter((it) => it);
-  const pureLinkList = gridLinkFilter(oriLinkData);
-
   // link转换为option.edges数据
   const linkNodeWrapper = (oriLinkData: linkOriginKey[]) =>
-    oriLinkData.map((_link: linkOriginKey) => {
-      const act = Math.abs(_link[linkKeyReflect.activePower]);
-      const min = activePowerRange[0];
-      const max = activePowerRange[1];
-      // 宽度范围1 ~ 4;
-      const lineWidth = ((act - min) / (max - min)) * 3 + 1;
+    oriLinkData.map((_link: any) => {
+      let StaFromItem = {},
+        StaToItem = {},
+        linkText = 0;
+      try {
+        const linkItem = _link["$"];
+        StaFromItem = oriNodesData[Number(linkItem.StaFromID)];
+        StaToItem = oriNodesData[Number(linkItem.StaToID)];
+        linkText = _link.Base[0]["$"].LabTxt;
+      } catch (e) {
+        console.info(e);
+      }
 
       return {
-        source: _link[linkKeyReflect.sourceName],
-        target: _link[linkKeyReflect.targetName],
-        value: Number(_link[linkKeyReflect.activePower]),
-        lineStyle: {
-          width: Math.ceil(lineWidth),
-        },
+        source: getNodeName(StaFromItem),
+        target: getNodeName(StaToItem),
+        value: linkText,
+        // lineStyle: {
+        //   width: Math.ceil(lineWidth),
+        // },
         label: {
           show: true,
-          formatter: "{c}(mw)",
+          formatter: "{c}",
         },
       };
     });
-  const graphLink = linkNodeWrapper(pureLinkList);
+  const graphLink = linkNodeWrapper(oriLinkData);
   console.log("=====linkData", graphLink);
 
   return graphLink;
