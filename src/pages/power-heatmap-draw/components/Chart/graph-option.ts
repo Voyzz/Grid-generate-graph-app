@@ -19,9 +19,33 @@ export const getEChartsOption = (
     tooltip: {},
     animationDurationUpdate: 1500,
     animationEasingUpdate: "quinticInOut",
+    // grid: {
+    //   left: "100px",
+    //   top: "100px",
+    //   width: 2200,
+    //   height: 1200,
+    // },
+    dataZoom: {
+      type: "slider",
+      zoomLock: true,
+    },
+    // grid: {
+    //   left: 0,
+    //   top: 0,
+    //   width: 2200,
+    //   height: 1200,
+    //   right: "auto",
+    //   bottom: "auto",
+    // },
     series: [
       {
         type: "graph",
+
+        // 布局
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
 
         /* 数据 */
         data: getNodesData(customOptions),
@@ -29,9 +53,9 @@ export const getEChartsOption = (
 
         /* 布局配置 */
         draggable: false, // 节点是否可拖拽
-        roam: false, // 开启缩放或者平移
+        roam: "move", // 开启缩放或者平移
         // center: ["50%", "50%"],
-        // zoom: 4,
+        zoom: 1,
 
         /* 力引导布局 */
         layout: "none",

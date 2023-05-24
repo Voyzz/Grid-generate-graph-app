@@ -26,7 +26,6 @@ const ExcelUploader = React.memo((props: ExcelUploaderProps) => {
           } else {
             // 将JSON格式化为字符串
             // const jsonStr = JSON.stringify(result, null, 2);
-            console.info('======111', result);
             handleExcelUpload && handleExcelUpload(result);
             // setJsonOutput(jsonStr);
           }

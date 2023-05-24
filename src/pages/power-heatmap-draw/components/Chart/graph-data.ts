@@ -31,8 +31,6 @@ const getNodeName = (it: any) => {
   return _text;
 };
 
-const zoom = 1;
-
 export const getNodesData = (customOptions: CustomOptionsItems) => {
   const { nodesData: _oriNodesData = [] } = customOptions || {};
 
@@ -42,6 +40,24 @@ export const getNodesData = (customOptions: CustomOptionsItems) => {
   } catch (e) {
     console.error(e);
   }
+
+  const { innerHeight, innerWidth } = window;
+  const getAxiosZoom = () => {
+    const axiosZoom = {
+      x: 1,
+      y: 1
+    };
+    try {
+      const { BottomRight_x, BottomRight_y, TopLeft_x, TopLeft_y } = _oriNodesData["NR_POWER_DRAW"]?.Canvas[0]?.PaperAttr[0]?.['$'];
+      axiosZoom.x = (Number(BottomRight_x) - Number(TopLeft_x)) / innerWidth;
+      axiosZoom.y = (Number(BottomRight_y) - Number(TopLeft_y)) / innerHeight;
+    } catch (err) {
+      console.error('getAxiosZoom error:', err);
+    }
+    return axiosZoom;
+  }
+
+  const axiosZoom = getAxiosZoom();
 
   console.info("========oriNodesData", oriNodesData);
 
@@ -58,14 +74,45 @@ export const getNodesData = (customOptions: CustomOptionsItems) => {
         // id: idx,
         name: getNodeName(_node),
         symbolSize: 50,
-        x: parseInt(item.Pos_x) / zoom,
-        y: parseInt(item.Pos_y) / zoom,
+        x: Number((parseInt(item.Pos_x) / axiosZoom.x).toFixed(0)),
+        y: Number((parseInt(item.Pos_y) / axiosZoom.y).toFixed(0)),
       };
     });
   const graphNode = girdNodeWrapper(oriNodesData);
-  console.log("=====NodesData", graphNode);
 
-  return graphNode;
+  const layoutNodes = [
+    {
+      "name": "B",
+      "symbolSize": 1,
+      "x": 0,
+      "y": 0,
+      fixed: true
+    },
+    {
+      "name": "C",
+      "symbolSize": 1,
+      "x": innerWidth,
+      "y": 0,
+      fixed: true
+    },
+    {
+      "name": "D",
+      "symbolSize": 1,
+      "x": 0,
+      "y": innerHeight,
+      fixed: true
+    },
+    {
+      "name": "E",
+      "symbolSize": 1,
+      "x": innerWidth,
+      "y": innerHeight,
+      fixed: true
+    },
+  ]
+  console.log("=====NodesData", graphNode.concat(layoutNodes));
+
+  return graphNode.concat(layoutNodes);
 };
 
 export const getLinkData = (customOptions: CustomOptionsItems) => {
