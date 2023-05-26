@@ -19,24 +19,10 @@ export const getEChartsOption = (
     tooltip: {},
     animationDurationUpdate: 1500,
     animationEasingUpdate: "quinticInOut",
-    // grid: {
-    //   left: "100px",
-    //   top: "100px",
-    //   width: 2200,
-    //   height: 1200,
-    // },
     dataZoom: {
       type: "slider",
       zoomLock: true,
     },
-    // grid: {
-    //   left: 0,
-    //   top: 0,
-    //   width: 2200,
-    //   height: 1200,
-    //   right: "auto",
-    //   bottom: "auto",
-    // },
     series: [
       {
         type: "graph",
@@ -53,7 +39,7 @@ export const getEChartsOption = (
 
         /* 布局配置 */
         draggable: false, // 节点是否可拖拽
-        roam: "move", // 开启缩放或者平移
+        roam: false, // 开启缩放或者平移
         // center: ["50%", "50%"],
         zoom: 1,
 
@@ -68,9 +54,6 @@ export const getEChartsOption = (
           // color: "#f00",
         },
         itemStyle: {},
-        // labelLayout: {
-        //   draggable: true,
-        // },
 
         /* 连接线 */
         animation: true,
@@ -80,13 +63,11 @@ export const getEChartsOption = (
         edgeLabel: {
           fontSize: 14,
           offset: [30, 0],
-          // verticalAlign: "bottom",
-          // lineHeight: 14,
-          // height: 14,
         },
         lineStyle: {
           width: 2,
           // color: "#e66",
+          color: "#fff",
           curveness: 0,
         },
       },

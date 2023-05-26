@@ -25,9 +25,7 @@ const ExcelUploader = React.memo((props: ExcelUploaderProps) => {
             throw new Error('XML解析错误');
           } else {
             // 将JSON格式化为字符串
-            // const jsonStr = JSON.stringify(result, null, 2);
             handleExcelUpload && handleExcelUpload(result);
-            // setJsonOutput(jsonStr);
           }
         });
       } catch (e) {

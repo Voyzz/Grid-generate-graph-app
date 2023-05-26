@@ -48,7 +48,7 @@ export const getNodesData = (customOptions: CustomOptionsItems) => {
       y: 1
     };
     try {
-      const { BottomRight_x, BottomRight_y, TopLeft_x, TopLeft_y } = _oriNodesData["NR_POWER_DRAW"]?.Canvas[0]?.PaperAttr[0]?.['$'];
+      const { BottomRight_x, BottomRight_y, TopLeft_x, TopLeft_y } = _oriNodesData["NR_POWER_DRAW"]?.Canvas[0]?.PaperAttr[0]?.['$'] || {};
       axiosZoom.x = (Number(BottomRight_x) - Number(TopLeft_x)) / innerWidth;
       axiosZoom.y = (Number(BottomRight_y) - Number(TopLeft_y)) / innerHeight;
     } catch (err) {
