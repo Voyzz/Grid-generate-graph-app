@@ -12,6 +12,7 @@ interface ChartProps { }
 const Chart = React.memo((props: ChartProps) => {
   const [chartInstance, setChartInstance] = useState<any>(null);
   const [sidesheetVisible, setSidesheetVisible] = useState<boolean>(true);
+  const [chartOption, setChartOption] = useState<any>(null);
 
   useEffect(() => {
     // 基于准备好的dom，初始化echarts实例
@@ -23,14 +24,20 @@ const Chart = React.memo((props: ChartProps) => {
   }, []);
 
   const refreshEChartsOption = (customOptions: CustomOptionsItems) => {
-    chartInstance.setOption(getEChartsOption(customOptions));
+    const _chartOption = getEChartsOption(customOptions);
+    setChartOption(_chartOption)
+    chartInstance.setOption(_chartOption);
   }
 
   return (
     <div className='grid-container'>
-      <GraphWithHeatmap />
+      {/* 热力图 */}
+      <GraphWithHeatmap chartOption={chartOption} />
+      {/* 关系图 */}
       <div id="grid-chart" />
+      {/* 功能按钮 */}
       <Buttons chartInstance={chartInstance} openDrawer={() => { setSidesheetVisible(true) }} />
+      {/* 表单边栏 */}
       <FormEditor
         sidesheetVisible={sidesheetVisible}
         closeDrawer={() => { setSidesheetVisible(false) }}

@@ -15,7 +15,7 @@ const ExcelUploader = React.memo((props: ExcelUploaderProps) => {
     // let _json = [];// 存储获取到的数据
     // 通过FileReader对象读取文件
     const fileReader = new FileReader();
-    fileReader.readAsBinaryString(file);  //二进制
+    fileReader.readAsText(file, 'utf-8');  //二进制
     fileReader.onload = event => {
       try {
         const { result: xmlInput } = event.target;
@@ -25,10 +25,7 @@ const ExcelUploader = React.memo((props: ExcelUploaderProps) => {
             throw new Error('XML解析错误');
           } else {
             // 将JSON格式化为字符串
-            // const jsonStr = JSON.stringify(result, null, 2);
-            console.info('======111', result);
             handleExcelUpload && handleExcelUpload(result);
-            // setJsonOutput(jsonStr);
           }
         });
       } catch (e) {

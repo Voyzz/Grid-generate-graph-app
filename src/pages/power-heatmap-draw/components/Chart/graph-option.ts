@@ -19,30 +19,32 @@ export const getEChartsOption = (
     tooltip: {},
     animationDurationUpdate: 1500,
     animationEasingUpdate: "quinticInOut",
+    dataZoom: {
+      type: "slider",
+      zoomLock: true,
+    },
     series: [
       {
         type: "graph",
 
+        // 布局
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+
         /* 数据 */
-        nodes: getNodesData(customOptions),
+        data: getNodesData(customOptions),
         links: getLinkData(customOptions),
 
         /* 布局配置 */
-        draggable: true, // 节点是否可拖拽
-        roam: true, // 开启缩放或者平移
-        center: ["50%", "50%"],
-        zoom: 4,
+        draggable: false, // 节点是否可拖拽
+        roam: false, // 开启缩放或者平移
+        // center: ["50%", "50%"],
+        zoom: 1,
 
         /* 力引导布局 */
-        layout: "force",
-        force: {
-          initLayout: "circular",
-          gravity: 0,
-          // repulsion: 60, // 节点之间的斥力因子
-          // edgeLength: 120, // 边的两个节点之间的距离
-          layoutAnimation: true, // 是否显示布局的迭代动画
-          friction: 1, // 节点的移动速度
-        },
+        layout: "none",
 
         /* 节点 */
         label: {
@@ -52,20 +54,20 @@ export const getEChartsOption = (
           // color: "#f00",
         },
         itemStyle: {},
-        // labelLayout: {
-        //   draggable: true,
-        // },
 
         /* 连接线 */
-        animation: false,
+        animation: true,
         autoCurveness: true,
+        edgeSymbol: ["circle", "arrow"],
         edgeSymbolSize: [4, 10],
         edgeLabel: {
-          fontSize: 12,
+          fontSize: 14,
+          offset: [30, 0],
         },
         lineStyle: {
-          width: 1,
+          width: 2,
           // color: "#e66",
+          color: "#fff",
           curveness: 0,
         },
       },
