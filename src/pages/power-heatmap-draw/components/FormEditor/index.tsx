@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { isMobile } from '../../utils/common';
-import { Form, Button, Drawer, Space, Input, Card, ColorPicker } from 'antd';
+import { Form, Button, Drawer, Space, Input, Card, ColorPicker, Row, Col, InputNumber } from 'antd';
 import ExcelUploader from '../../utils/ExcelUploader';
 import defaultValue from '../../data/form_default';
 import type { Color } from 'antd/es/color-picker';
@@ -34,11 +34,12 @@ export interface CustomOptionsItems {
   linkData: any[];
   reflectKeys: ReflectKeys;
   customConfig: Configs;
+  heatmapConfig: any;
 }
 
 const layout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 20 },
+  // labelCol: { span: 6 },
+  // wrapperCol: { span: 20 },
 };
 
 interface FormEditorProps {
@@ -76,13 +77,9 @@ const FormEditor = React.memo((props: FormEditorProps) => {
   const onFinish = () => {
     const { getFormValues, closeDrawer } = props;
     const values = form.getFieldsValue();
-    console.info('===Form Values:', values);
+    // console.info('===Form Values:', values);
     getFormValues && getFormValues(values);
     closeDrawer();
-  };
-
-  const onReset = () => {
-    form.resetFields();
   };
 
   const renderDrawerFooter = () => (
@@ -91,16 +88,13 @@ const FormEditor = React.memo((props: FormEditorProps) => {
         <Button type="primary" onClick={onFinish}>
           确定
         </Button>
-        <Button htmlType="button" onClick={onReset}>
-          重置
-        </Button>
       </Space>
     </div>
   )
 
   const renderFileConfig = () => (
-    <Card title="Excel File" className='formCard'>
-      <Form.Item label="接线图文件" name="nodesData" required>
+    <Card title="PG File" className='formCard'>
+      <Form.Item label="接线图(.pg)" name="nodesData" required>
         <ExcelUploader
           btnName="上传"
           handleExcelUpload={(sheet_to_json) => {
@@ -111,74 +105,101 @@ const FormEditor = React.memo((props: FormEditorProps) => {
     </Card>
   )
 
-  const renderSettings = () => (
-    <Card title="Setting" className='formCard'>
+  const renderChartSettings = () => (
+    <Card title="Chart Setting" className='formCard'>
       <Form.Item
         label="图片标题"
         name="title"
       >
         <Input />
       </Form.Item>
-      <Form.Item
-        label="节点颜色"
-        name={['customConfig', 'node', 'nodeColor']}
-      >
-        <ColorPicker value={nodeColor} onChange={(color: Color) => {
-          setNodeColor(color);
-          form.setFieldValue('customConfig', {
-            ...customConfig,
-            node: {
-              ...customConfig?.node,
-              nodeColor: color
-            }
-          })
-        }} />
-      </Form.Item>
-      <Form.Item
-        label="节点文字颜色"
-        name={['customConfig', 'node', 'nodeTextColor']}
-      >
-        <ColorPicker value={nodeTextColor} onChange={(color: Color) => {
-          setNodeTextColor(color);
-          form.setFieldValue('customConfig', {
-            ...customConfig,
-            node: {
-              ...customConfig?.node,
-              nodeTextColor: color
-            }
-          })
-        }} />
-      </Form.Item>
-      <Form.Item
-        label="连线颜色"
-        name={['customConfig', 'link', 'lineColor']}
-      >
-        <ColorPicker value={lineColor} onChange={(color: Color) => {
-          setLineColor(color);
-          form.setFieldValue('customConfig', {
-            ...customConfig,
-            link: {
-              ...customConfig?.link,
-              lineColor: color
-            }
-          })
-        }} />
-      </Form.Item>
-      <Form.Item
-        label="连线文字颜色"
-        name={['customConfig', 'link', 'lineTextColor']}
-      >
-        <ColorPicker value={lineTextColor} onChange={(color: Color) => {
-          setLineTextColor(color);
-          form.setFieldValue('customConfig', {
-            ...customConfig,
-            link: {
-              ...customConfig?.link,
-              lineTextColor: color
-            }
-          })
-        }} />
-      </Form.Item>
+      <Row>
+        <Col span={10}>
+          <Form.Item
+            label="节点颜色"
+            name={['customConfig', 'node', 'nodeColor']}
+          >
+            <ColorPicker value={nodeColor} onChange={(value: Color, hex: string) => {
+              setNodeColor(hex);
+              form.setFieldValue('customConfig', {
+                ...customConfig,
+                node: {
+                  ...customConfig?.node,
+                  nodeColor: hex
+                }
+              })
+            }} />
+          </Form.Item>
+        </Col>
+        <Col span={10}>
+          <Form.Item
+            label="节点文字颜色"
+            name={['customConfig', 'node', 'nodeTextColor']}
+          >
+            <ColorPicker value={nodeTextColor} onChange={(value: Color, hex: string) => {
+              setNodeTextColor(hex);
+              form.setFieldValue('customConfig', {
+                ...customConfig,
+                node: {
+                  ...customConfig?.node,
+                  nodeTextColor: hex
+                }
+              })
+            }} />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={10}>
+          <Form.Item
+            label="连线颜色"
+            name={['customConfig', 'link', 'lineColor']}
+          >
+            <ColorPicker value={lineColor} onChange={(value: Color, hex: string) => {
+              setLineColor(hex);
+              form.setFieldValue('customConfig', {
+                ...customConfig,
+                link: {
+                  ...customConfig?.link,
+                  lineColor: hex
+                }
+              })
+            }} />
+          </Form.Item>
+        </Col>
+        <Col span={10}>
+          <Form.Item
+            label="连线文字颜色"
+            name={['customConfig', 'link', 'lineTextColor']}
+          >
+            <ColorPicker value={lineTextColor} onChange={(value: Color, hex: string) => {
+              setLineTextColor(hex);
+              form.setFieldValue('customConfig', {
+                ...customConfig,
+                link: {
+                  ...customConfig?.link,
+                  lineTextColor: hex
+                }
+              })
+            }} />
+          </Form.Item>
+        </Col>
+      </Row>
+    </Card>
+  )
+
+  const renderHeatMapSettings = () => (
+    <Card title="Heatmap Setting" className='heatmapFormCard'>
+      <Row>
+        <Col span={10}>
+          <Form.Item
+            label="热力半径"
+            name={['heatmapConfig', 'radius']}
+          >
+            <InputNumber min={1} step={5} />
+          </Form.Item>
+        </Col>
+      </Row>
     </Card>
   )
 
@@ -201,8 +222,8 @@ const FormEditor = React.memo((props: FormEditorProps) => {
         labelWrap
       >
         {renderFileConfig()}
-        {/* {renderConfig()} */}
-        {renderSettings()}
+        {renderChartSettings()}
+        {renderHeatMapSettings()}
       </Form>
     </Drawer>
   );

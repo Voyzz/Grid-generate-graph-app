@@ -3,18 +3,19 @@ import React, { useRef, useEffect } from 'react';
 
 interface Props {
   chartOption?: any;
+  heatmapOption?: any;
 }
-
-const heatNodeRadius = 25;
-// const nodeRadius = 10;
 
 function MyHeatmapComponent(props: Props) {
   const heatmapContainerRef = useRef(null);
-  const { chartOption } = props;
+  const { chartOption, heatmapOption = {} } = props;
+
+  const heatNodeRadius = heatmapOption?.radius;
 
   const heatmapConfig = {
     container: heatmapContainerRef.current,
-    radius: heatNodeRadius,
+    ...heatmapOption
+    // radius: heatmapOption.heatNodeRadius,
     // maxOpacity: .5,
     // minOpacity: 0,
     // blur: .75,
@@ -72,6 +73,7 @@ function MyHeatmapComponent(props: Props) {
 
     // 在组件挂载后初始化 Heatmap.js
     destroyCanvas();
+    console.info('======== Heatmap config: ', heatmapConfig);
     const heatmapInstance = Heatmap.create(heatmapConfig);
     heatmapInstance.setData(_data);
   }

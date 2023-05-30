@@ -60,7 +60,7 @@ export const getNodesData = (customOptions: CustomOptionsItems) => {
 
   const axiosZoom = getAxiosZoom();
 
-  console.info("========oriNodesData", oriNodesData);
+  // console.info("========oriNodesData", oriNodesData);
 
   if (!oriNodesData) {
     return [];
@@ -111,7 +111,7 @@ export const getNodesData = (customOptions: CustomOptionsItems) => {
       fixed: true
     },
   ]
-  console.log("=====NodesData", graphNode.concat(layoutNodes));
+  // console.log("=====NodesData", graphNode.concat(layoutNodes));
 
   return graphNode.concat(layoutNodes);
 };
@@ -166,7 +166,7 @@ export const getLinkData = (customOptions: CustomOptionsItems) => {
       };
     });
   const graphLink = linkNodeWrapper(oriLinkData);
-  console.log("=====linkData", graphLink);
+  // console.log("=====linkData", graphLink);
 
   return graphLink;
 };

@@ -22,6 +22,9 @@ const defaultValue: CustomOptionsItems = {
     node: defaultNodeConfig,
     link: defaultLinkConfig,
   },
+  heatmapConfig: {
+    radius: 25
+  }
 };
 
 export default defaultValue;
