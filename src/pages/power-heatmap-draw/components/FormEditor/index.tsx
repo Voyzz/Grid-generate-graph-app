@@ -3,6 +3,7 @@ import { isMobile } from '../../utils/common';
 import { Form, Button, Drawer, Space, Input, Card } from 'antd';
 import ExcelUploader from '../../utils/ExcelUploader';
 import defaultValue from '../../data/form_default';
+import { PopoverPicker } from '../ColorPicker';
 import './index.css';
 
 export interface ReflectKeys {
@@ -49,6 +50,24 @@ interface FormEditorProps {
 const FormEditor = React.memo((props: FormEditorProps) => {
   const [form] = Form.useForm();
   const [sidesheetVisible, setSidesheetVisible] = useState<boolean>(props.sidesheetVisible);
+  const { customConfig } = form.getFieldsValue();
+
+  // 非受控表单配置项
+  const [nodeColor, setNodeColor] = useState('');
+  const [nodeTextColor, setNodeTextColor] = useState('');
+  const [lineColor, setLineColor] = useState('');
+  const [lineTextColor, setLineTextColor] = useState('');
+
+  useEffect(() => {
+    setTimeout(() => {
+      const { customConfig } = form.getFieldsValue();
+      setNodeColor(customConfig?.node?.nodeColor);
+      setNodeTextColor(customConfig?.node?.nodeTextColor);
+      setLineColor(customConfig?.link?.lineColor);
+      setLineTextColor(customConfig?.link?.lineTextColor);
+    }, 100);
+  }, [])
+
 
   useEffect(() => {
     setSidesheetVisible(props.sidesheetVisible)
@@ -103,34 +122,64 @@ const FormEditor = React.memo((props: FormEditorProps) => {
         <Input />
       </Form.Item>
       <Form.Item
-        label="背景颜色"
-        name="bgColor"
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
         label="节点颜色"
         name={['customConfig', 'node', 'nodeColor']}
       >
-        <Input placeholder={_placeholder} />
+        <PopoverPicker color={nodeColor} onChange={(color: string) => {
+          setNodeColor(color);
+          form.setFieldValue('customConfig', {
+            ...customConfig,
+            node: {
+              ...customConfig?.node,
+              nodeColor: color
+            }
+          })
+        }} />
       </Form.Item>
       <Form.Item
         label="节点文字颜色"
         name={['customConfig', 'node', 'nodeTextColor']}
       >
-        <Input placeholder={_placeholder} />
+        <PopoverPicker color={nodeTextColor} onChange={(color: string) => {
+          setNodeTextColor(color);
+          form.setFieldValue('customConfig', {
+            ...customConfig,
+            node: {
+              ...customConfig?.node,
+              nodeTextColor: color
+            }
+          })
+        }} />
       </Form.Item>
       <Form.Item
         label="连线颜色"
         name={['customConfig', 'link', 'lineColor']}
       >
-        <Input placeholder={_placeholder} />
+        <PopoverPicker color={lineColor} onChange={(color: string) => {
+          setLineColor(color);
+          form.setFieldValue('customConfig', {
+            ...customConfig,
+            link: {
+              ...customConfig?.link,
+              lineColor: color
+            }
+          })
+        }} />
       </Form.Item>
       <Form.Item
         label="连线文字颜色"
         name={['customConfig', 'link', 'lineTextColor']}
       >
-        <Input placeholder={_placeholder} />
+        <PopoverPicker color={lineTextColor} onChange={(color: string) => {
+          setLineTextColor(color);
+          form.setFieldValue('customConfig', {
+            ...customConfig,
+            link: {
+              ...customConfig?.link,
+              lineTextColor: color
+            }
+          })
+        }} />
       </Form.Item>
     </Card>
   )

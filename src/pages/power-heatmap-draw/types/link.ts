@@ -14,6 +14,6 @@ export interface linkOriginKey {
 
 export const defaultLinkConfig = {
   activePowerRange: [0, 200],
-  lineColor: "#EE6666",
-  lineTextColor: "",
+  lineColor: "#000000",
+  lineTextColor: "#404040",
 };

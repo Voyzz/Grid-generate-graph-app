@@ -25,6 +25,7 @@ const getNodeName = (it: any) => {
         _text = _text + `${Text}\n`;
       }
     });
+    _text = _text.replace(/\n+$/, '');
   } catch (e) {
     console.error(e);
   }
