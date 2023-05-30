@@ -61,13 +61,13 @@ const Buttons = React.memo((props: ChartProps) => {
 
   return (
     <>
-      <FloatButton.Group shape="circle" style={{ right: isMobile ? 94 : 154 }} trigger="hover" icon={<UnorderedListOutlined />}>
-        <FloatButton icon={<SearchOutlined />} onClick={findNode} />
-        <FloatButton icon={<ReloadOutlined />} onClick={reload} />
-        <FloatButton icon={<PictureOutlined />} onClick={downloadPic} />
+      <FloatButton.Group shape="circle" style={{ right: isMobile ? 94 : 154 }} trigger="hover" icon={<UnorderedListOutlined rev="horizontal" />}>
+        <FloatButton icon={<SearchOutlined rev="horizontal" />} onClick={findNode} />
+        <FloatButton icon={<ReloadOutlined rev="horizontal" />} onClick={reload} />
+        <FloatButton icon={<PictureOutlined rev="horizontal" />} onClick={downloadPic} />
       </FloatButton.Group>
       <FloatButton.Group shape="circle" style={{ right: isMobile ? 34 : 94 }}>
-        <FloatButton type="primary" icon={<SettingOutlined />} onClick={props.openDrawer} />
+        <FloatButton type="primary" icon={<SettingOutlined rev="horizontal" />} onClick={props.openDrawer} />
       </FloatButton.Group>
     </>
   )

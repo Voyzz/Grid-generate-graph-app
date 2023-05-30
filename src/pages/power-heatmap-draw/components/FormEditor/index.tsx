@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { isMobile } from '../../utils/common';
-import { Form, Button, Drawer, Space, Input, Card } from 'antd';
+import { Form, Button, Drawer, Space, Input, Card, ColorPicker } from 'antd';
 import ExcelUploader from '../../utils/ExcelUploader';
 import defaultValue from '../../data/form_default';
-import { PopoverPicker } from '../ColorPicker';
+import type { Color } from 'antd/es/color-picker';
 import './index.css';
 
 export interface ReflectKeys {
@@ -53,10 +53,10 @@ const FormEditor = React.memo((props: FormEditorProps) => {
   const { customConfig } = form.getFieldsValue();
 
   // 非受控表单配置项
-  const [nodeColor, setNodeColor] = useState('');
-  const [nodeTextColor, setNodeTextColor] = useState('');
-  const [lineColor, setLineColor] = useState('');
-  const [lineTextColor, setLineTextColor] = useState('');
+  const [nodeColor, setNodeColor] = useState<Color | string>('');
+  const [nodeTextColor, setNodeTextColor] = useState<Color | string>('');
+  const [lineColor, setLineColor] = useState<Color | string>('');
+  const [lineTextColor, setLineTextColor] = useState<Color | string>('');
 
   useEffect(() => {
     setTimeout(() => {
@@ -66,7 +66,7 @@ const FormEditor = React.memo((props: FormEditorProps) => {
       setLineColor(customConfig?.link?.lineColor);
       setLineTextColor(customConfig?.link?.lineTextColor);
     }, 100);
-  }, [])
+  }, [form])
 
 
   useEffect(() => {
@@ -111,8 +111,6 @@ const FormEditor = React.memo((props: FormEditorProps) => {
     </Card>
   )
 
-  const _placeholder = '支持使用rgba, #ffffff等格式';
-
   const renderSettings = () => (
     <Card title="Setting" className='formCard'>
       <Form.Item
@@ -125,7 +123,7 @@ const FormEditor = React.memo((props: FormEditorProps) => {
         label="节点颜色"
         name={['customConfig', 'node', 'nodeColor']}
       >
-        <PopoverPicker color={nodeColor} onChange={(color: string) => {
+        <ColorPicker value={nodeColor} onChange={(color: Color) => {
           setNodeColor(color);
           form.setFieldValue('customConfig', {
             ...customConfig,
@@ -140,7 +138,7 @@ const FormEditor = React.memo((props: FormEditorProps) => {
         label="节点文字颜色"
         name={['customConfig', 'node', 'nodeTextColor']}
       >
-        <PopoverPicker color={nodeTextColor} onChange={(color: string) => {
+        <ColorPicker value={nodeTextColor} onChange={(color: Color) => {
           setNodeTextColor(color);
           form.setFieldValue('customConfig', {
             ...customConfig,
@@ -155,7 +153,7 @@ const FormEditor = React.memo((props: FormEditorProps) => {
         label="连线颜色"
         name={['customConfig', 'link', 'lineColor']}
       >
-        <PopoverPicker color={lineColor} onChange={(color: string) => {
+        <ColorPicker value={lineColor} onChange={(color: Color) => {
           setLineColor(color);
           form.setFieldValue('customConfig', {
             ...customConfig,
@@ -170,7 +168,7 @@ const FormEditor = React.memo((props: FormEditorProps) => {
         label="连线文字颜色"
         name={['customConfig', 'link', 'lineTextColor']}
       >
-        <PopoverPicker color={lineTextColor} onChange={(color: string) => {
+        <ColorPicker value={lineTextColor} onChange={(color: Color) => {
           setLineTextColor(color);
           form.setFieldValue('customConfig', {
             ...customConfig,
