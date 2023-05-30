@@ -256,7 +256,7 @@ const FormEditor = React.memo((props: FormEditorProps) => {
   return (
     <Drawer
       width={isMobile ? 'calc(100vw - 40px)' : 600}
-      title="参数配置"
+      title="CONFIG"
       placement="left"
       onClose={() => { props.closeDrawer() }}
       open={sidesheetVisible}
