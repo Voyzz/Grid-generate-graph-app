@@ -13,6 +13,7 @@ const Chart = React.memo((props: ChartProps) => {
   const [chartInstance, setChartInstance] = useState<any>(null);
   const [sidesheetVisible, setSidesheetVisible] = useState<boolean>(true);
   const [chartOption, setChartOption] = useState<any>(null);
+  const [heatmapOption, setHeatmapOption] = useState<any>({});
 
   useEffect(() => {
     // 基于准备好的dom，初始化echarts实例
@@ -24,15 +25,20 @@ const Chart = React.memo((props: ChartProps) => {
   }, []);
 
   const refreshEChartsOption = (customOptions: CustomOptionsItems) => {
+    // 热力图的设置项
+    setHeatmapOption(customOptions?.heatmapConfig);
+    // 根据设置生成Echarts的option
     const _chartOption = getEChartsOption(customOptions);
     setChartOption(_chartOption)
+    // 生成Echarts图
+    console.info('======== Echarts options: ', _chartOption);
     chartInstance.setOption(_chartOption);
   }
 
   return (
     <div className='grid-container'>
       {/* 热力图 */}
-      <GraphWithHeatmap chartOption={chartOption} />
+      <GraphWithHeatmap chartOption={chartOption} heatmapOption={heatmapOption} />
       {/* 关系图 */}
       <div id="grid-chart" />
       {/* 功能按钮 */}

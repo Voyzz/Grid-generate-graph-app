@@ -10,6 +10,6 @@ export interface nodeOriginKey {
 
 export const defaultNodeConfig = {
   amplitudeRange: [200, 500],
-  nodeColor: "",
+  nodeColor: "#5c7bd9",
   nodeTextColor: "",
 };

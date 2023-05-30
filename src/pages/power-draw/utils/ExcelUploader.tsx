@@ -47,7 +47,7 @@ const ExcelUploader = React.memo((props: ExcelUploaderProps) => {
         maxCount={1}
       >
         <Button>
-          <UploadOutlined />
+          <UploadOutlined rev="horizontal" />
           {btnName || '点击上传Excel'}
         </Button>
       </Upload>

@@ -11,3 +11,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.ant-upload-wrapper .ant-upload-list .ant-upload-list-item-error .ant-upload-icon .anticon {
+  color: #1677FF !important;
+}
+
+.ant-upload-wrapper .ant-upload-list .ant-upload-list-item-error .ant-upload-list-item-actions .anticon {
+  color: #1677FF !important;
+}
+
+.ant-upload-list-item-name {
+  color: #1677FF !important;
+}

@@ -1,17 +1,6 @@
-// import { uniqBy } from "lodash";
-// import demoLinkData from "../../data/link_data.json";
-// import demoNodesData from "../../data/node_data.json";
 import { CustomOptionsItems } from "../FormEditor";
-import {
-  // nodeKeyReflect as defaultNodeKeyReflect,
-  nodeOriginKey,
-  // defaultNodeConfig,
-} from "../../types/node";
-import {
-  // linkKeyReflect as defaultLinkKeyReflect,
-  linkOriginKey,
-  // defaultLinkConfig,
-} from "../../types/link";
+import { nodeOriginKey } from "../../types/node";
+import { linkOriginKey } from "../../types/link";
 
 const getNodeName = (it: any) => {
   let _text = "";
@@ -25,6 +14,7 @@ const getNodeName = (it: any) => {
         _text = _text + `${Text}\n`;
       }
     });
+    _text = _text.replace(/\n+$/, '');
   } catch (e) {
     console.error(e);
   }
@@ -32,7 +22,8 @@ const getNodeName = (it: any) => {
 };
 
 export const getNodesData = (customOptions: CustomOptionsItems) => {
-  const { nodesData: _oriNodesData = [] } = customOptions || {};
+  const { nodesData: _oriNodesData = [], heatmapConfig = {}, customConfig } = customOptions || {};
+  const { isPowerHeatmap } = heatmapConfig;
 
   let oriNodesData = null;
   try {
@@ -59,7 +50,7 @@ export const getNodesData = (customOptions: CustomOptionsItems) => {
 
   const axiosZoom = getAxiosZoom();
 
-  console.info("========oriNodesData", oriNodesData);
+  // console.info("========oriNodesData", oriNodesData);
 
   if (!oriNodesData) {
     return [];
@@ -73,7 +64,7 @@ export const getNodesData = (customOptions: CustomOptionsItems) => {
       return {
         // id: idx,
         name: getNodeName(_node),
-        symbolSize: 50,
+        symbolSize: isPowerHeatmap ? customConfig?.nodeSize || 50 : 1,
         x: Number((parseInt(item.Pos_x) / axiosZoom.x).toFixed(0)),
         y: Number((parseInt(item.Pos_y) / axiosZoom.y).toFixed(0)),
       };
@@ -110,13 +101,13 @@ export const getNodesData = (customOptions: CustomOptionsItems) => {
       fixed: true
     },
   ]
-  console.log("=====NodesData", graphNode.concat(layoutNodes));
+  // console.log("=====NodesData", graphNode.concat(layoutNodes));
 
   return graphNode.concat(layoutNodes);
 };
 
 export const getLinkData = (customOptions: CustomOptionsItems) => {
-  const { nodesData: _oriData = [] } = customOptions || {};
+  const { nodesData: _oriData = [], customConfig } = customOptions || {};
 
   let oriLinkData = null;
   try {
@@ -155,17 +146,19 @@ export const getLinkData = (customOptions: CustomOptionsItems) => {
         source: getNodeName(StaFromItem),
         target: getNodeName(StaToItem),
         value: linkText,
-        // lineStyle: {
-        //   width: Math.ceil(lineWidth),
-        // },
+        lineStyle: {
+          width: Number(customConfig?.lineWidth || 1),
+        },
         label: {
           show: true,
           formatter: "{c}",
+          align: 'right' as any,
+          fontSize: Number(customConfig?.lineFontSize || 12),
         },
       };
     });
   const graphLink = linkNodeWrapper(oriLinkData);
-  console.log("=====linkData", graphLink);
+  // console.log("=====linkData", graphLink);
 
   return graphLink;
 };
