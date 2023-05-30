@@ -21,9 +21,22 @@ const defaultValue: CustomOptionsItems = {
   customConfig: {
     node: defaultNodeConfig,
     link: defaultLinkConfig,
+    nodeSize: 50,
+    lineWidth: 2,
+    lineFontSize: 12,
   },
   heatmapConfig: {
-    radius: 25
+    radius: 25,
+    opacity: .6,
+    blur: .85,
+    isPowerHeatmap: true,
+    // gradient: {
+    //   '0.25': '#0000ff',
+    //   '0.45': '#00ffff',
+    //   '0.65': '#00ff00',
+    //   '0.85': '#ffff00',
+    //   '1.0': '#ff0000',
+    // },
   }
 };
 

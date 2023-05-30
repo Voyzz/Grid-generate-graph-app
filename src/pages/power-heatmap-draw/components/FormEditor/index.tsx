@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { isMobile } from '../../utils/common';
-import { Form, Button, Drawer, Space, Input, Card, ColorPicker, Row, Col, InputNumber } from 'antd';
+import { Form, Button, Drawer, Space, Input, Card, ColorPicker, Row, Col, InputNumber, Switch } from 'antd';
+import { SmileTwoTone } from '@ant-design/icons';
 import ExcelUploader from '../../utils/ExcelUploader';
 import defaultValue from '../../data/form_default';
 import type { Color } from 'antd/es/color-picker';
@@ -25,7 +26,10 @@ export interface Configs {
     activePowerRange: number[];
     lineColor?: string;
     lineTextColor?: string;
-  }
+  },
+  nodeSize: number;
+  lineWidth: number;
+  lineFontSize: number;
 }
 export interface CustomOptionsItems {
   title: string;
@@ -85,8 +89,8 @@ const FormEditor = React.memo((props: FormEditorProps) => {
   const renderDrawerFooter = () => (
     <div className='drawerFooterBox'>
       <Space wrap>
-        <Button type="primary" onClick={onFinish}>
-          确定
+        <Button type="primary" onClick={onFinish} icon={<SmileTwoTone rev="horizontal" />}>
+          Generate
         </Button>
       </Space>
     </div>
@@ -94,7 +98,13 @@ const FormEditor = React.memo((props: FormEditorProps) => {
 
   const renderFileConfig = () => (
     <Card title="PG File" className='formCard'>
-      <Form.Item label="接线图(.pg)" name="nodesData" required>
+      <Form.Item
+        label="图片标题"
+        name="title"
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item label="接线图(.pg)" name="nodesData">
         <ExcelUploader
           btnName="上传"
           handleExcelUpload={(sheet_to_json) => {
@@ -107,12 +117,16 @@ const FormEditor = React.memo((props: FormEditorProps) => {
 
   const renderChartSettings = () => (
     <Card title="Chart Setting" className='formCard'>
-      <Form.Item
-        label="图片标题"
-        name="title"
-      >
-        <Input />
-      </Form.Item>
+      <Row>
+        <Col span={10}>
+          <Form.Item
+            label="节点大小"
+            name={['customConfig', 'nodeSize']}
+          >
+            <InputNumber min={1} step={5} />
+          </Form.Item>
+        </Col>
+      </Row>
       <Row>
         <Col span={10}>
           <Form.Item
@@ -146,6 +160,24 @@ const FormEditor = React.memo((props: FormEditorProps) => {
                 }
               })
             }} />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={10}>
+          <Form.Item
+            label="连线宽度"
+            name={['customConfig', 'lineWidth']}
+          >
+            <InputNumber min={1} step={1} />
+          </Form.Item>
+        </Col>
+        <Col span={10}>
+          <Form.Item
+            label="线上字体大小"
+            name={['customConfig', 'lineFontSize']}
+          >
+            <InputNumber min={1} step={1} />
           </Form.Item>
         </Col>
       </Row>
@@ -199,7 +231,25 @@ const FormEditor = React.memo((props: FormEditorProps) => {
             <InputNumber min={1} step={5} />
           </Form.Item>
         </Col>
+        <Col span={10}>
+          <Form.Item
+            label="模糊因子"
+            name={['heatmapConfig', 'blur']}
+          >
+            <InputNumber min={0} max={1} step={0.05} />
+          </Form.Item>
+        </Col>
       </Row>
+      <Form.Item
+        label="热力图展示"
+        name={['heatmapConfig', 'isPowerHeatmap']}
+      >
+        <Switch
+          checkedChildren="功率"
+          unCheckedChildren="电压"
+          defaultChecked
+        />
+      </Form.Item>
     </Card>
   )
 
