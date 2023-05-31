@@ -15,11 +15,11 @@
   align-items: center;
 }
 
-:where(.css-dev-only-do-not-override-w8mnev).ant-switch {
+.ant-switch {
   background: #FE725C;
 }
 
-:where(.css-dev-only-do-not-override-w8mnev).ant-switch:hover:not(.ant-switch-disabled) {
+.ant-switch:hover:not(.ant-switch-disabled) {
   background: #FE725Caa;
 }
 

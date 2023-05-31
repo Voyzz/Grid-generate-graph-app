@@ -93,6 +93,10 @@ export const getEChartsOption = (
     if (lineTextColor) {
       defalutOption.series[0].edgeLabel.color = lineTextColor;
     }
+    const nodeFontSize = customOptions?.customConfig?.nodeFontSize;
+    if (nodeFontSize) {
+      defalutOption.series[0].label.fontSize = nodeFontSize;
+    }
   } catch (e) {
     console.error(e);
     return defalutOption;

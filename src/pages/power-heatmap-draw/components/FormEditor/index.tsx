@@ -28,7 +28,9 @@ export interface Configs {
     lineColor?: string;
     lineTextColor?: string;
   },
+  minVol: number;
   nodeSize: number;
+  nodeFontSize: number;
   lineWidth: number;
   lineFontSize: number;
 }
@@ -146,6 +148,14 @@ const FormEditor = React.memo((props: FormEditorProps) => {
             name={['customConfig', 'nodeSize']}
           >
             <InputNumber min={1} step={5} />
+          </Form.Item>
+        </Col>
+        <Col span={10}>
+          <Form.Item
+            label="节点字体大小"
+            name={['customConfig', 'nodeFontSize']}
+          >
+            <InputNumber min={1} step={1} />
           </Form.Item>
         </Col>
       </Row>
@@ -283,6 +293,31 @@ const FormEditor = React.memo((props: FormEditorProps) => {
     </Card>
   )
 
+  const renderFilter = () => (
+    <Card
+      title={
+        <Row>
+          <HamsterWheel />
+          <div>节点筛选</div>
+        </Row>
+      }
+      className='heatmapFormCard'
+    >
+      <Row>
+        <Col span={10}>
+          <Form.Item
+            label="最小电压"
+            name={['customConfig', 'minVol']}
+          >
+            <InputNumber min={0} step={10} />
+          </Form.Item>
+        </Col>
+      </Row>
+    </Card>
+  )
+
+
+
   return (
     <Drawer
       width={isMobile ? 'calc(100vw - 40px)' : 600}
@@ -304,6 +339,7 @@ const FormEditor = React.memo((props: FormEditorProps) => {
         {renderFileConfig()}
         {renderChartSettings()}
         {renderHeatMapSettings()}
+        {renderFilter()}
       </Form>
     </Drawer>
   );

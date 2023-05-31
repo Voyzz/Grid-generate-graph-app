@@ -21,7 +21,9 @@ const defaultValue: CustomOptionsItems = {
   customConfig: {
     node: defaultNodeConfig,
     link: defaultLinkConfig,
+    minVol: 0,
     nodeSize: 40,
+    nodeFontSize: 12,
     lineWidth: 3,
     lineFontSize: 15,
   },
