@@ -1,6 +1,7 @@
 import { CustomOptionsItems } from "../FormEditor";
 import { nodeOriginKey } from "../../types/node";
 import { linkOriginKey } from "../../types/link";
+import { uniqBy } from "lodash";
 
 const getNodeName = (it: any) => {
   let _text = "";
@@ -36,12 +37,16 @@ export const getNodesData = (customOptions: CustomOptionsItems) => {
   const getAxiosZoom = () => {
     const axiosZoom = {
       x: 1,
-      y: 1
+      y: 1,
+      TopLeft_x: 0,
+      TopLeft_y: 0
     };
     try {
       const { BottomRight_x, BottomRight_y, TopLeft_x, TopLeft_y } = _oriNodesData["NR_POWER_DRAW"]?.Canvas[0]?.PaperAttr[0]?.['$'] || {};
       axiosZoom.x = (Number(BottomRight_x) - Number(TopLeft_x)) / innerWidth;
       axiosZoom.y = (Number(BottomRight_y) - Number(TopLeft_y)) / innerHeight;
+      axiosZoom.TopLeft_x = Number(TopLeft_x);
+      axiosZoom.TopLeft_y = Number(TopLeft_y);
     } catch (err) {
       console.error('getAxiosZoom error:', err);
     }
@@ -49,8 +54,6 @@ export const getNodesData = (customOptions: CustomOptionsItems) => {
   }
 
   const axiosZoom = getAxiosZoom();
-
-  // console.info("========oriNodesData", oriNodesData);
 
   if (!oriNodesData) {
     return [];
@@ -65,12 +68,21 @@ export const getNodesData = (customOptions: CustomOptionsItems) => {
         // id: idx,
         name: getNodeName(_node),
         symbolSize: isPowerHeatmap ? customConfig?.nodeSize || 50 : 1,
-        x: Number((parseInt(item.Pos_x) / axiosZoom.x).toFixed(0)),
-        y: Number((parseInt(item.Pos_y) / axiosZoom.y).toFixed(0)),
+        x: Number(((parseInt(item.Pos_x) - axiosZoom.TopLeft_x) / axiosZoom.x).toFixed(0)),
+        y: Number(((parseInt(item.Pos_y) - axiosZoom.TopLeft_y) / axiosZoom.y).toFixed(0)),
       };
     });
-  const graphNode = girdNodeWrapper(oriNodesData);
 
+  // 根据电压筛选节点
+  const graphNode = girdNodeWrapper(oriNodesData).filter(it => {
+    try {
+      return Number(it?.name.split('\n')[0]) > customConfig?.minVol || 0
+    } catch (e) {
+      return true;
+    }
+  });
+
+  // 边界节点
   const layoutNodes = [
     {
       "name": "B",
@@ -101,9 +113,10 @@ export const getNodesData = (customOptions: CustomOptionsItems) => {
       fixed: true
     },
   ]
-  // console.log("=====NodesData", graphNode.concat(layoutNodes));
 
-  return graphNode.concat(layoutNodes);
+  const _graphNode = graphNode.concat(layoutNodes)
+
+  return uniqBy(_graphNode, 'name');
 };
 
 export const getLinkData = (customOptions: CustomOptionsItems) => {
