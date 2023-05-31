@@ -5,6 +5,7 @@ import { SmileTwoTone } from '@ant-design/icons';
 import ExcelUploader from '../../utils/ExcelUploader';
 import defaultValue from '../../data/form_default';
 import type { Color } from 'antd/es/color-picker';
+import HamsterWheel from './HamsterWheel';
 import './index.css';
 
 export interface ReflectKeys {
@@ -90,33 +91,54 @@ const FormEditor = React.memo((props: FormEditorProps) => {
     <div className='drawerFooterBox'>
       <Space wrap>
         <Button type="primary" onClick={onFinish} icon={<SmileTwoTone rev="horizontal" />}>
-          Generate
+          生成
         </Button>
       </Space>
     </div>
   )
 
   const renderFileConfig = () => (
-    <Card title="PG File" className='formCard'>
-      <Form.Item
-        label="图片标题"
-        name="title"
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item label="接线图(.pg)" name="nodesData">
-        <ExcelUploader
-          btnName="上传"
-          handleExcelUpload={(sheet_to_json) => {
-            form.setFieldsValue({ nodesData: sheet_to_json });
-          }}
-        />
-      </Form.Item>
+    <Card
+      title={
+        <Row>
+          <HamsterWheel />
+          <div>基础配置</div>
+        </Row>
+      }
+      className='formCard'
+    >
+      <Row>
+        <Col span={12}>
+          <Form.Item
+            label="图片标题"
+            name="title"
+          >
+            <Input />
+          </Form.Item>
+        </Col>
+        <Col span={2} />
+        <Form.Item label="接线图(.pg)" name="nodesData">
+          <ExcelUploader
+            btnName="上传"
+            handleExcelUpload={(sheet_to_json) => {
+              form.setFieldsValue({ nodesData: sheet_to_json });
+            }}
+          />
+        </Form.Item>
+      </Row>
     </Card>
   )
 
   const renderChartSettings = () => (
-    <Card title="Chart Setting" className='formCard'>
+    <Card
+      title={
+        <Row>
+          <HamsterWheel />
+          <div>拓扑图配置</div>
+        </Row>
+      }
+      className='formCard'
+    >
       <Row>
         <Col span={10}>
           <Form.Item
@@ -221,7 +243,15 @@ const FormEditor = React.memo((props: FormEditorProps) => {
   )
 
   const renderHeatMapSettings = () => (
-    <Card title="Heatmap Setting" className='heatmapFormCard'>
+    <Card
+      title={
+        <Row>
+          <HamsterWheel />
+          <div>热力图配置</div>
+        </Row>
+      }
+      className='heatmapFormCard'
+    >
       <Row>
         <Col span={10}>
           <Form.Item
@@ -256,7 +286,7 @@ const FormEditor = React.memo((props: FormEditorProps) => {
   return (
     <Drawer
       width={isMobile ? 'calc(100vw - 40px)' : 600}
-      title="CONFIG"
+      title="参数配置"
       placement="left"
       onClose={() => { props.closeDrawer() }}
       open={sidesheetVisible}
