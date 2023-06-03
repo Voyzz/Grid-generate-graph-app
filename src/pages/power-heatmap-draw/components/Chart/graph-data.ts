@@ -9,9 +9,9 @@ const getNodeName = (it: any) => {
     // const item = it["$"];
     const item = it;
     const subText = item.Label[0].SubText;
-    subText.forEach((text: any) => {
+    subText.forEach((text: any, idx: number) => {
       const Text = text["$"]?.Text;
-      if (Text) {
+      if (Text && idx <= 3) {
         _text = _text + `${Text}\n`;
       }
     });
@@ -22,8 +22,27 @@ const getNodeName = (it: any) => {
   return _text;
 };
 
+const getID = (it: any) => {
+  let _text = "";
+  try {
+    // const item = it["$"];
+    const item = it;
+    const bus = item.BusSet[0].Bus;
+    bus.forEach((b: any, idx: number) => {
+      const Name = b["$"]?.Name;
+      if (Name) {
+        _text = _text + `${Name}\n`;
+      }
+    });
+    _text = _text.replace(/\n+$/, '');
+  } catch (e) {
+    console.error(e);
+  }
+  return _text;
+}
+
 export const getNodesData = (customOptions: CustomOptionsItems) => {
-  const { nodesData: _oriNodesData = [], heatmapConfig = {}, customConfig } = customOptions || {};
+  const { nodesData: _oriNodesData = [], heatmapConfig = {}, customConfig, filterData = [] } = customOptions || {};
   const { isPowerHeatmap } = heatmapConfig;
 
   let oriNodesData = null;
@@ -33,8 +52,29 @@ export const getNodesData = (customOptions: CustomOptionsItems) => {
     console.error(e);
   }
 
+  // 节点筛选
+  try {
+    const idList = oriNodesData.map(it => getID(it));
+    oriNodesData = oriNodesData.filter((node, idx) => {
+      const vol = Number(node.Label[0].SubText[0]['$'].Text);
+      // 电压筛选
+      if (!(vol >= customConfig?.minVol && vol <= customConfig?.maxVol)) {
+        return false;
+      }
+      // excel筛选
+      if (filterData?.length > 0 && !filterData.find(node => new RegExp(node['节点名称']).test(idList[idx]))) {
+        return false;
+      }
+      return true;
+    })
+  } catch (e) {
+    console.error(e);
+  }
+
+
   const { innerHeight, innerWidth } = window;
   const getAxiosZoom = () => {
+    const paddingTop = 3000;
     const axiosZoom = {
       x: 1,
       y: 1,
@@ -42,11 +82,39 @@ export const getNodesData = (customOptions: CustomOptionsItems) => {
       TopLeft_y: 0
     };
     try {
-      const { BottomRight_x, BottomRight_y, TopLeft_x, TopLeft_y } = _oriNodesData["NR_POWER_DRAW"]?.Canvas[0]?.PaperAttr[0]?.['$'] || {};
-      axiosZoom.x = (Number(BottomRight_x) - Number(TopLeft_x)) / innerWidth;
-      axiosZoom.y = (Number(BottomRight_y) - Number(TopLeft_y)) / innerHeight;
-      axiosZoom.TopLeft_x = Number(TopLeft_x);
-      axiosZoom.TopLeft_y = Number(TopLeft_y);
+      let maxX = 0, minX = 0, maxY = 0, minY = 0;
+      oriNodesData.forEach(node => {
+        const _x = Number(node['$'].Pos_x);
+        const _y = Number(node['$'].Pos_y);
+        maxX = _x > maxX ? _x : maxX;
+        minX = _x < minX ? _x : minX;
+        maxY = _y > maxY ? _y : maxY;
+        minY = _y < minY ? _y : minY;
+      })
+      // const maxX = maxBy(oriNodesData, property('$.Pos_x')).$.Pos_x;
+      // const minX = minBy(oriNodesData, property('$.Pos_x')).$.Pos_x;
+      // const maxY = maxBy(oriNodesData, property('$.Pos_y')).$.Pos_y;
+      // const minY = minBy(oriNodesData, property('$.Pos_y')).$.Pos_y;
+
+      // const { BottomRight_x, BottomRight_y, TopLeft_x, TopLeft_y } = _oriNodesData["NR_POWER_DRAW"]?.Canvas[0]?.PaperAttr[0]?.['$'] || {};
+
+      // const zoomX = (Number(BottomRight_x) - Number(TopLeft_x)) / (Number(maxX) - Number(minX));
+      // const zoomY = (Number(BottomRight_y) - Number(TopLeft_y)) / (Number(maxY) - Number(minY));
+
+      const BottomRight_x = maxX + paddingTop;
+      const TopLeft_x = minX - paddingTop;
+      const BottomRight_y = maxY + paddingTop;
+      const TopLeft_y = minY - paddingTop;
+      const _zoom = 1;
+      // console.info('======00', zoomX, zoomY);
+      // console.info('======001', BottomRight_x, TopLeft_x, BottomRight_y, TopLeft_y)
+      // console.info('======002', maxX, minX, maxY, minY)
+      // console.info('======00', _zoom);
+
+      axiosZoom.x = ((Number(BottomRight_x) - Number(TopLeft_x)) / _zoom) / innerWidth;
+      axiosZoom.y = ((Number(BottomRight_y) - Number(TopLeft_y)) / _zoom) / innerHeight;
+      axiosZoom.TopLeft_x = Number(TopLeft_x) / _zoom;
+      axiosZoom.TopLeft_y = Number(TopLeft_y) / _zoom;
     } catch (err) {
       console.error('getAxiosZoom error:', err);
     }
@@ -63,9 +131,8 @@ export const getNodesData = (customOptions: CustomOptionsItems) => {
   const girdNodeWrapper = (oriNodes: nodeOriginKey[]) =>
     oriNodes.map((_node: any, idx) => {
       const item = _node["$"];
-
       return {
-        // id: idx,
+        // id: getID(_node) as any,
         name: getNodeName(_node),
         symbolSize: isPowerHeatmap ? customConfig?.nodeSize || 50 : 1,
         x: Number(((parseInt(item.Pos_x) - axiosZoom.TopLeft_x) / axiosZoom.x).toFixed(0)),
@@ -73,14 +140,7 @@ export const getNodesData = (customOptions: CustomOptionsItems) => {
       };
     });
 
-  // 根据电压筛选节点
-  const graphNode = girdNodeWrapper(oriNodesData).filter(it => {
-    try {
-      return Number(it?.name.split('\n')[0]) > customConfig?.minVol || 0
-    } catch (e) {
-      return true;
-    }
-  });
+  const graphNode = girdNodeWrapper(oriNodesData);
 
   // 边界节点
   const layoutNodes = [
