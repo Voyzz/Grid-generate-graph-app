@@ -29,6 +29,7 @@ export interface Configs {
     lineTextColor?: string;
   },
   minVol: number;
+  maxVol: number;
   nodeSize: number;
   nodeFontSize: number;
   lineWidth: number;
@@ -39,6 +40,7 @@ export interface CustomOptionsItems {
   bgColor: string;
   nodesData: any;
   linkData: any[];
+  filterData: any;
   reflectKeys: ReflectKeys;
   customConfig: Configs;
   heatmapConfig: any;
@@ -118,15 +120,29 @@ const FormEditor = React.memo((props: FormEditorProps) => {
             <Input />
           </Form.Item>
         </Col>
-        <Col span={2} />
-        <Form.Item label="接线图(.pg)" name="nodesData">
-          <ExcelUploader
-            btnName="上传"
-            handleExcelUpload={(sheet_to_json) => {
-              form.setFieldsValue({ nodesData: sheet_to_json });
-            }}
-          />
-        </Form.Item>
+      </Row>
+      <Row>
+        <Col span={12}>
+          <Form.Item label="接线图(.pg)" name="nodesData">
+            <ExcelUploader
+              btnName="上传"
+              handleExcelUpload={(sheet_to_json) => {
+                form.setFieldsValue({ nodesData: sheet_to_json });
+              }}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item label="节点筛选(.excel)" name="filterData">
+            <ExcelUploader
+              btnName="上传"
+              fileType='excel'
+              handleExcelUpload={(excel) => {
+                form.setFieldsValue({ filterData: excel });
+              }}
+            />
+          </Form.Item>
+        </Col>
       </Row>
     </Card>
   )
@@ -308,6 +324,14 @@ const FormEditor = React.memo((props: FormEditorProps) => {
           <Form.Item
             label="最小电压"
             name={['customConfig', 'minVol']}
+          >
+            <InputNumber min={0} step={10} />
+          </Form.Item>
+        </Col>
+        <Col span={10}>
+          <Form.Item
+            label="最大电压"
+            name={['customConfig', 'maxVol']}
           >
             <InputNumber min={0} step={10} />
           </Form.Item>

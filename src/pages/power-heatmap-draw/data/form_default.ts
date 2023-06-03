@@ -7,6 +7,7 @@ const defaultValue: CustomOptionsItems = {
   bgColor: "#ffffff00",
   nodesData: [],
   linkData: [],
+  filterData: [],
   reflectKeys: {
     node: {
       name: nodeKeyReflect.name,
@@ -22,6 +23,7 @@ const defaultValue: CustomOptionsItems = {
     node: defaultNodeConfig,
     link: defaultLinkConfig,
     minVol: 0,
+    maxVol: 600,
     nodeSize: 40,
     nodeFontSize: 12,
     lineWidth: 3,
